@@ -4,6 +4,8 @@ FROM node:22-alpine AS builder
 # this will be our working directory of the docker container
 WORKDIR /app 
 
+RUN apk add --no-cache openssl
+
 # Copy package files first — Docker caches this layer
 # If you only change src files, npm install won't re-run
 COPY package*.json ./
@@ -18,6 +20,8 @@ RUN npm run build
 FROM node:22-alpine AS runner
 
 WORKDIR /app
+
+RUN apk add --no-cache openssl
 
 COPY package*.json ./
 
@@ -36,4 +40,7 @@ RUN npx prisma@5 generate
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+COPY docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
+
+CMD ["./docker-entrypoint.sh"]

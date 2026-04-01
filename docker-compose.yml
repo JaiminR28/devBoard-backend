@@ -1,0 +1,45 @@
+services :
+  # this is the first service for postgres
+  postgres:
+    image: postgres:16-alpine
+    container_name: devboard-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: devboard
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - devboard-network
+
+  api:
+    build: .
+    container_name: devboard-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/devboard
+    depends_on:
+      - postgres
+    networks:
+      - devboard-network
+  
+  nginx:
+    image: nginx:alpine
+    container_name: devboard-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+    networks:
+      - devboard-network
+
+volumes:
+  postgres_data:
+
+networks:
+  devboard-network:
+    driver: bridge
