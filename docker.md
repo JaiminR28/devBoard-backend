@@ -1,4 +1,4 @@
-## Why `npm ci` instead of `npm install`?**
+## Why `npm ci` instead of `npm install`?
 `ci` is short for "clean install" — it installs exactly what's in `package-lock.json` with no surprises. Always use it in Docker and CI pipelines.
 
 ## Why copy `package*.json` before the rest of the source?**
