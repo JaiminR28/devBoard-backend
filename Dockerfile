@@ -15,7 +15,7 @@ COPY . .
 RUN npm run build
 
 # ── Stage 2: Run ────────────────────────────────────────────────
-FROM node:22-alpine AS Runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 
@@ -31,7 +31,7 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
 # Generate Prisma client inside this image
-RUN npx prisma generate
+RUN npx prisma@5 generate
 
 
 EXPOSE 3000
