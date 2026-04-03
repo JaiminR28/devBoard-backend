@@ -8,14 +8,14 @@ on:
 jobs:
     tests:
         name: Run Tests
-        runs-on: ubantu-latest
+        runs-on: ubuntu-latest
 
         steps:
             -   name: Checkout node
-                uses: actions/checkout@v4
+                uses: actions/checkout@v6.0.2
 
             -   name: Setup Node.js
-                uses: actions/setup-node@v4
+                uses: actions/setup-node@v6.3.0
                 with:
                     node-version: '22'
                     cache: 'npm'
@@ -33,14 +33,14 @@ jobs:
 
         steps:
             -   name: Checkout code
-                uses: actions/checkout@v4
+                uses: actions/checkout@v6.0.2
             
             -   name: Deploy to EC2 via SSH
                 uses: appleboy/ssh-action@v1.0.3
                 with:
                     host: ${{secrets.EC2_HOST}}
                     username: ${{secrets.EC2_USER}}
-                    key: ${{secrets.EC2_KEY}}
+                    key: ${{secrets.EC2_SSH_KEY}}
                     script: |
                         cd devBoard
                         git pull origin main
